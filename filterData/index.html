@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Filter</title>
+    <style>
+        .student-list {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .student-card {
+            border: 1px solid #ebabab;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            width: 150px;
+            text-align: center;
+            background-color: #b99191;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Student Marks Filter</h1>
+
+
+<div>
+    <label><input type="checkbox" id="marks90" /> Show 90+ Marks</label><br />
+    <label><input type="checkbox" id="marks75" /> Show 75+ Marks</label><br />
+    <label><input type="checkbox" id="marks50" /> Show 50+ Marks</label><br />
+    <label><input type="checkbox" id="failed" /> Show Failed Students</label><br>
+    <label><input type="checkbox" id="allStudents" /> Show All Students</label>
+</div>
+
+
+<button onclick="filterAndShowData()">Show Data</button>
+
+
+<div class="student-list" id="studentList"></div>
+
+<script>
+
+const students = [
+    { name: 'Aakash', marks: 95 },
+    { name: 'yatish', marks: 96 },
+    { name: 'Sara', marks: 85 },
+    { name: 'Suresh', marks: 86 },
+    { name: 'aman', marks: 77 },
+    { name: 'ansh', marks: 60 },
+    { name: 'prince', marks: 45 },
+    { name: 'ankush', marks: 30 },
+];
+
+function filterAndShowData() {
+   
+    const is90Checked = document.getElementById('marks90').checked;
+    const is75Checked = document.getElementById('marks75').checked;
+    const is50Checked = document.getElementById('marks50').checked;
+    const isFailedChecked = document.getElementById('failed').checked;
+    const isAllChecked = document.getElementById('allStudents').checked;
+
+    let filteredStudents = [];
+
+    if (isAllChecked) {
+        filteredStudents = students;
+    } 
+    else 
+    {
+        filteredStudents = students.filter(student => {
+            return (is90Checked && student.marks >= 90) ||
+                   (is75Checked && student.marks >= 75 && student.marks < 90) ||
+                   (is50Checked && student.marks >= 50 && student.marks < 75) ||
+                   (isFailedChecked && student.marks < 50);
+        });
+    }
+
+    displayStudents(filteredStudents);
+}
+
+function displayStudents(filteredStudents) {
+    const studentList = document.getElementById('studentList');
+    studentList.innerHTML = ''; 
+
+    if (filteredStudents.length == 0) {
+        studentList.innerHTML = '<p>No students found.</p>';
+        return;
+    }
+    
+
+    filteredStudents.forEach(student => {
+        const studentCard = document.createElement('div');
+        studentCard.className = 'student-card';
+        studentCard.innerHTML = `<strong>${student.name}</strong><br>Marks: ${student.marks}`;
+        studentList.appendChild(studentCard);
+    });
+}
+
+</script>
+
+</body>
+</html>
